@@ -27,7 +27,17 @@ const els = {
   restartBtn: $("restartBtn"),
   loading: $("loading"),
   work: $("work"),
+  // 가상 메이크업
+  makeoverLoading: $("makeoverLoading"),
+  afterImg: $("afterImg"),
+  makeoverMsg: $("makeoverMsg"),
+  makeoverControls: $("makeoverControls"),
+  toggleBA: $("toggleBA"),
+  downloadBtn: $("downloadBtn"),
 };
+
+let afterDataURL = null;   // 메이크업 입힌 결과
+let showingOriginal = false;
 
 let stream = null;
 let currentImageURL = null;
@@ -311,7 +321,63 @@ function renderResult(res) {
 
   els.stepResult.hidden = false;
   els.stepResult.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  runMakeover(res.season);
 }
+
+/* ---------------- 가상 메이크업 입히기 ---------------- */
+
+async function runMakeover(season) {
+  // 초기화
+  afterDataURL = null;
+  showingOriginal = false;
+  els.makeoverControls.hidden = true;
+  els.afterImg.hidden = true;
+  els.makeoverMsg.hidden = true;
+  els.makeoverLoading.hidden = false;
+  els.toggleBA.textContent = "👀 원본과 비교";
+
+  try {
+    const result = await window.MakeupTryOn.run(els.previewImg, season);
+    els.makeoverLoading.hidden = true;
+
+    if (!result.ok) {
+      showMakeoverMsg(
+        result.reason === "no-face"
+          ? "얼굴을 인식하지 못해 메이크업을 입히지 못했어요. 😥 밝은 곳에서 정면 얼굴이 잘 보이는 사진으로 다시 시도해 주세요."
+          : "메이크업 사진을 만들지 못했어요. 다른 사진으로 다시 시도해 주세요."
+      );
+      return;
+    }
+
+    afterDataURL = result.canvas.toDataURL("image/png");
+    els.afterImg.src = afterDataURL;
+    els.afterImg.hidden = false;
+    els.downloadBtn.href = afterDataURL;
+    els.makeoverControls.hidden = false;
+  } catch (err) {
+    console.error(err);
+    els.makeoverLoading.hidden = true;
+    showMakeoverMsg(
+      "메이크업 미리보기를 불러오지 못했어요. (인터넷 연결이 필요한 기능이에요.) " +
+      "위의 추천 컬러·단계는 그대로 참고할 수 있어요!"
+    );
+  }
+}
+
+function showMakeoverMsg(msg) {
+  els.makeoverMsg.textContent = msg;
+  els.makeoverMsg.hidden = false;
+  els.makeoverControls.hidden = true;
+  els.afterImg.hidden = true;
+}
+
+els.toggleBA.addEventListener("click", () => {
+  if (!afterDataURL) return;
+  showingOriginal = !showingOriginal;
+  els.afterImg.src = showingOriginal ? currentImageURL : afterDataURL;
+  els.toggleBA.textContent = showingOriginal ? "💄 메이크업 보기" : "👀 원본과 비교";
+});
 
 function buildWhy(res) {
   const skinPct = Math.round(res.skinRatio * 100);

@@ -86,6 +86,24 @@
 
       <p id="seasonDesc" class="result__desc"></p>
 
+      <!-- 가상 메이크업 입힌 사진 -->
+      <div class="makeover">
+        <h3 class="rec__title">🪞 메이크업 입힌 내 사진</h3>
+        <div id="makeoverStage" class="makeover__stage">
+          <div id="makeoverLoading" class="makeover__loading">
+            <div class="loading__spinner"></div>
+            <p>얼굴을 찾아 메이크업을 입히는 중...</p>
+          </div>
+          <img id="afterImg" class="makeover__img" alt="메이크업을 입힌 사진" hidden />
+          <p id="makeoverMsg" class="makeover__msg" hidden></p>
+        </div>
+        <div id="makeoverControls" class="makeover__controls" hidden>
+          <button id="toggleBA" class="btn btn--ghost" type="button">👀 원본과 비교</button>
+          <a id="downloadBtn" class="btn btn--primary" download="k뷰티_메이크업.png">💾 사진 저장</a>
+        </div>
+        <p class="makeover__note">※ 실제 화장이 아니라 색을 얹어 미리 보는 <b>가상 메이크업</b>이에요.</p>
+      </div>
+
       <div class="rec">
         <h3 class="rec__title">💄 추천 메이크업: <span id="styleName"></span></h3>
         <p id="styleMood" class="rec__mood"></p>
@@ -129,6 +147,7 @@
   </div>
 
   <script src="js/data.js"></script>
+  <script src="js/makeup.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -129,6 +129,21 @@ body {
 
 .result__desc { color: var(--ink); font-size: 14.5px; line-height: 1.6; background: #fbf4f7; padding: 12px 14px; border-radius: 12px; }
 
+/* ---------- 가상 메이크업 ---------- */
+.makeover { margin: 6px 0 8px; }
+.makeover__stage {
+  min-height: 120px; display: grid; place-items: center;
+  background: #fbf4f7; border: 1px solid var(--line); border-radius: 16px;
+  padding: 12px; margin-top: 8px;
+}
+.makeover__img { max-width: 100%; border-radius: 12px; display: block; }
+.makeover__loading { text-align: center; color: var(--pink-deep); font-size: 14px; font-weight: 600; padding: 20px; }
+.makeover__loading .loading__spinner { width: 36px; height: 36px; border-width: 4px; }
+.makeover__msg { text-align: center; color: var(--ink-soft); font-size: 14px; line-height: 1.6; padding: 16px; margin: 0; }
+.makeover__controls { display: flex; gap: 10px; margin-top: 12px; }
+.makeover__controls .btn { flex: 1; text-decoration: none; }
+.makeover__note { font-size: 12px; color: var(--ink-soft); text-align: center; margin: 8px 0 0; }
+
 .rec__title { font-size: 18px; margin: 18px 0 4px; }
 .rec__title span { color: var(--pink-deep); }
 .rec__mood { color: var(--ink-soft); font-size: 14px; margin: 0 0 8px; }
