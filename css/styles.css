@@ -16,6 +16,9 @@
 
 * { box-sizing: border-box; }
 
+/* hidden 속성은 어떤 클래스보다 우선해서 숨김 (로딩·단계 오버레이 버그 방지) */
+[hidden] { display: none !important; }
+
 html, body {
   margin: 0;
   padding: 0;
