@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-뷰티 퍼스널컬러 · 메이크업 추천</title>
+  <meta name="description" content="셀카를 올리면 어울리는 한국 메이크업 스타일을 추천해주는 수업용 웹앱. 사진은 기기 밖으로 전송되지 않아요." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app__header">
+      <h1 class="app__title">🌸 K-뷰티 퍼스널컬러</h1>
+      <p class="app__subtitle">셀카를 올리면 어울리는 <b>한국 메이크업 스타일</b>을 추천해줘요</p>
+      <p class="app__privacy">🔒 사진은 인터넷으로 전송되지 않고, 이 기기 안에서만 분석돼요.</p>
+    </header>
+
+    <!-- ============ STEP 1: 사진 업로드 ============ -->
+    <section id="step-upload" class="card step">
+      <h2 class="step__label"><span class="step__num">1</span> 사진 준비하기</h2>
+      <p class="hint">밝고 자연스러운 빛(창가 낮빛 추천)에서, 화장을 하지 않은 정면 얼굴이 가장 정확해요.</p>
+
+      <div class="upload">
+        <label class="btn btn--primary" for="fileInput">
+          📁 사진 올리기
+          <input id="fileInput" type="file" accept="image/*" hidden />
+        </label>
+        <button id="cameraBtn" class="btn btn--ghost" type="button">📷 카메라로 찍기</button>
+      </div>
+
+      <!-- 카메라 화면 -->
+      <div id="cameraArea" class="camera" hidden>
+        <video id="video" playsinline autoplay muted></video>
+        <div class="camera__controls">
+          <button id="captureBtn" class="btn btn--primary" type="button">📸 촬영</button>
+          <button id="cancelCamBtn" class="btn btn--ghost" type="button">닫기</button>
+        </div>
+      </div>
+
+      <p id="camError" class="error" hidden></p>
+    </section>
+
+    <!-- ============ STEP 2: 분석 미리보기 ============ -->
+    <section id="step-preview" class="card step" hidden>
+      <h2 class="step__label"><span class="step__num">2</span> 얼굴 확인</h2>
+      <div class="preview">
+        <div class="preview__imgwrap">
+          <img id="previewImg" alt="업로드한 셀카 미리보기" />
+          <div id="sampleBox" class="preview__samplebox" hidden></div>
+        </div>
+        <div class="preview__actions">
+          <p class="hint">파란 상자 안쪽의 <b>볼·이마 피부색</b>을 읽어서 분석해요.</p>
+          <button id="analyzeBtn" class="btn btn--primary" type="button">✨ 분석하기</button>
+          <button id="retakeBtn" class="btn btn--ghost" type="button">다시 고르기</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STEP 3: 결과 ============ -->
+    <section id="step-result" class="card step" hidden>
+      <h2 class="step__label"><span class="step__num">3</span> 추천 결과</h2>
+
+      <div class="result__hero">
+        <div class="result__season">
+          <div id="seasonEmoji" class="result__emoji">🌸</div>
+          <div>
+            <div id="seasonName" class="result__seasonname">봄 웜톤</div>
+            <div id="seasonEng" class="result__seasoneng">Spring Warm</div>
+          </div>
+        </div>
+        <div class="result__metrics">
+          <div class="metric">
+            <span class="metric__k">감지된 피부색</span>
+            <span id="skinSwatch" class="metric__swatch"></span>
+          </div>
+          <div class="metric">
+            <span class="metric__k">언더톤</span>
+            <span id="undertoneVal" class="metric__v">웜(따뜻)</span>
+          </div>
+          <div class="metric">
+            <span class="metric__k">밝기</span>
+            <span id="depthVal" class="metric__v">밝음</span>
+          </div>
+        </div>
+      </div>
+
+      <p id="seasonDesc" class="result__desc"></p>
+
+      <div class="rec">
+        <h3 class="rec__title">💄 추천 메이크업: <span id="styleName"></span></h3>
+        <p id="styleMood" class="rec__mood"></p>
+
+        <h4 class="rec__sub">🎨 어울리는 컬러</h4>
+        <div id="palette" class="palette"></div>
+
+        <h4 class="rec__sub">📝 따라하기</h4>
+        <ol id="steps" class="steps"></ol>
+
+        <h4 class="rec__sub">💡 꿀팁</h4>
+        <ul id="tips" class="tips"></ul>
+      </div>
+
+      <details class="why">
+        <summary>내 결과는 어떻게 나온 걸까? (선생님·학생용 설명)</summary>
+        <div id="whyBody" class="why__body"></div>
+      </details>
+
+      <div class="result__actions">
+        <button id="restartBtn" class="btn btn--primary" type="button">🔄 다른 사진으로 다시하기</button>
+      </div>
+
+      <p class="disclaimer">
+        ※ 이 결과는 사진의 밝기·조명에 영향을 받는 <b>재미와 학습용 추천</b>이에요.
+        퍼스널컬러는 사람마다 다양하고, 어떤 색이든 자유롭게 즐겨도 좋아요! 🌈
+      </p>
+    </section>
+
+    <!-- 분석 중 오버레이 -->
+    <div id="loading" class="loading" hidden>
+      <div class="loading__spinner"></div>
+      <p>피부색을 읽는 중...</p>
+    </div>
+
+    <canvas id="work" hidden></canvas>
+
+    <footer class="app__footer">
+      <p>메이크업 수업용 · 퍼스널컬러 학습 도구</p>
+    </footer>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
